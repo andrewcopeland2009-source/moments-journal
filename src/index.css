@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ———————————————————————————————————————————
+   Palette — channels so Tailwind can apply alpha.
+   ——————————————————————————————————————————— */
+:root,
+[data-theme='light'] {
+  --bg: 246 241 232; /* warm ivory */
+  --surface: 252 249 243; /* off-white page */
+  --sunken: 238 231 219; /* muted beige */
+  --ink: 43 39 36; /* warm charcoal */
+  --soft: 112 103 94;
+  --faint: 168 158 146;
+  --line: 226 217 202;
+  --accent: 178 150 106; /* pale champagne, deepened for legibility */
+  --shadow: 74 58 38;
+  --scrim: 31 27 23;
+  color-scheme: light;
+}
+
+[data-theme='light'][data-tone='champagne'] {
+  --bg: 243 235 221;
+  --surface: 250 245 236;
+  --sunken: 234 223 204;
+  --line: 223 210 188;
+  --accent: 172 140 92;
+}
+
+[data-theme='light'][data-tone='stone'] {
+  --bg: 240 238 233;
+  --surface: 249 248 245;
+  --sunken: 229 226 219;
+  --line: 222 218 210;
+  --soft: 106 102 96;
+  --accent: 150 136 112;
+}
+
+[data-theme='dark'] {
+  --bg: 13 12 11; /* deep black */
+  --surface: 23 21 19; /* soft charcoal */
+  --sunken: 32 29 26;
+  --ink: 237 230 218;
+  --soft: 163 154 142; /* warm gray */
+  --faint: 110 103 94;
+  --line: 44 40 36;
+  --accent: 201 174 128; /* muted champagne */
+  --shadow: 0 0 0;
+  --scrim: 0 0 0;
+  color-scheme: dark;
+}
+
+[data-theme='dark'][data-tone='champagne'] {
+  --bg: 16 14 12;
+  --surface: 27 24 20;
+  --sunken: 37 33 28;
+  --accent: 212 182 132;
+}
+
+[data-theme='dark'][data-tone='stone'] {
+  --bg: 12 12 12;
+  --surface: 22 22 21;
+  --sunken: 31 31 29;
+  --line: 42 42 40;
+  --accent: 186 172 150;
+}
+
+[data-font='classic'] {
+  --font-serif: 'Cormorant Garamond';
+  --serif-scale: 1.08;
+}
+[data-font='modern'] {
+  --font-serif: 'Fraunces Variable';
+  --serif-scale: 0.94;
+}
+[data-font='literary'] {
+  --font-serif: 'Newsreader Variable';
+  --serif-scale: 0.97;
+}
+
+/* ———————————————————————————————————————————
+   Base
+   ——————————————————————————————————————————— */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  background: rgb(var(--bg));
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+  font-family: 'Inter Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+textarea,
+input {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.28);
+}
+
+/* Theme cross-fade (View Transitions where supported) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.theme-fade,
+html.theme-fade * {
+  transition:
+    background-color 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 500ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Boot splash — removed once React has painted. */
+#boot {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--bg));
+  z-index: 100;
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+#boot span {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 15px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  padding-left: 0.5em;
+  color: rgb(var(--soft));
+}
+#boot.gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@layer components {
+  .label {
+    @apply font-sans text-[10.5px] font-medium uppercase tracking-label text-soft;
+  }
+  .serif {
+    font-family: var(--font-serif), Georgia, serif;
+    font-optical-sizing: auto;
+  }
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 16px);
+  }
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 12px);
+  }
+  .hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(var(--line)) 18%, rgb(var(--line)) 82%, transparent);
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .shimmer {
+    background: linear-gradient(
+      100deg,
+      rgb(var(--sunken)) 30%,
+      rgb(var(--surface)) 50%,
+      rgb(var(--sunken)) 70%
+    );
+    background-size: 220% 100%;
+    animation: shimmer 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  .grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.42 0 0 0 0 0.3 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+  }
+}
